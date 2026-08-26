@@ -1,37 +1,60 @@
 import MovieCard from "../components/MovieCard";
-import {useState} from "react";
-
+import { useState, useEffect } from "react";
+import { searchMovies, getPopularMovies } from "../service/api";
 
 export default function Home() {
-
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setloading] = useState(true);
 
-
-  const movies = [
-    { id: 1, title: "Batman Begins", release_date: "13/09/2005" },
-    { id: 2, title: "Dark Knight", release_date: "13/09/2008" },
-    { id: 3, title: "Dark Knight Rises", release_date: "13/09/2011" },
-  ];
-
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    alert(searchQuery);
-    setSearchQuery("")
-    
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        setError(err)
+        console.log(error);
+      } finally {
+        setloading(false);
+      }
     }
+    loadPopularMovies()
+  }, []);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return
+    if(loading) return
+
+    setloading(true)
+    try {
+      const searchResults = await searchMovies(searchQuery)
+      setMovies(searchResults)
+      setError(null)
+      
+    }
+    catch (err) {
+      console.log(err)
+      setError("Failed to search movies...")
+    }
+  };
 
   return (
-
-
     <div className="home">
       <form onSubmit={handleSearch} className="search-form">
-        <input type="text" placeholder="Enter movie to search" className="movie-search"
+        <input
+          type="text"
+          placeholder="Enter movie to search"
+          className="movie-search"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}/>
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <button type="submit">Search</button>
       </form>
-      {movies.map((movie) => (
+
+       {movies.map((movie) => (
         <MovieCard movie={movie} key={movie.id} />
       ))}
     </div>
