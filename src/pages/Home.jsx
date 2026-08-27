@@ -54,9 +54,13 @@ export default function Home() {
         <button type="submit">Search</button>
       </form>
 
-       {movies.map((movie) => (
-        <MovieCard movie={movie} key={movie.id} />
-      ))}
+      {error && <p className="error-message">{error}</p>}
+
+      <div className="movies-grid">
+        {movies.map((movie) => (
+          <MovieCard movie={movie} key={movie.id} />
+        ))}
+      </div>
     </div>
   );
 }
