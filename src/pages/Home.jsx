@@ -21,7 +21,7 @@ export default function Home() {
       }
     }
     loadPopularMovies()
-  }, []);
+  }, []); 
 
   const handleSearch = async (e) => {
     e.preventDefault();

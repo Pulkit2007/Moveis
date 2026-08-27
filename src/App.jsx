@@ -1,11 +1,12 @@
 import Home from "./pages/Home";
 import { Routes, Route } from "react-router-dom";
 import Favorite from "./pages/Favourite"
+import { MovieProvider } from "./context/MovieContext";
 import NavBar from "./components/NavBar";
 
 export default function App() {
 
-  return (<div>
+  return (MovieProvider>
     <NavBar/>
     <main className="main-content">
       <Routes>
@@ -14,6 +15,6 @@ export default function App() {
       </Routes>
 
     </main> 
-  </div>
+  </MovieProvider> 
   )
 }
